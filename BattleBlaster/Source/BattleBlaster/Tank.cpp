@@ -24,8 +24,8 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller)) {
+	PlayerController = Cast<APlayerController>(Controller);
+	if (PlayerController) {
 	
 		if (ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer()) {
 		
@@ -42,12 +42,12 @@ void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController) {
 		FHitResult HitResult;
 		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 		
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 25.0f, 12, FColor::Blue,false, 0.0f);
+		//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 25.0f, 12, FColor::Blue,false, 0.0f);
 	
 		RotateTurret(HitResult.ImpactPoint);
 	}
@@ -86,8 +86,32 @@ void ATank::TurnInput(const FInputActionValue& Value)
 	FRotator DeltaLocation = FRotator::ZeroRotator;
 	DeltaLocation.Yaw = TurnRate * InputValue * GetWorld()->GetDeltaSeconds();
 	AddActorLocalRotation(DeltaLocation, true);
-	UE_LOG(LogTemp, Display,TEXT("TurnInputValues: %f"), InputValue);
+//	UE_LOG(LogTemp, Display,TEXT("TurnInputValues: %f"), InputValue);
 }
+
+void ATank::HandleDestruction() {
+	Super::HandleDestruction();
+	
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
+	SetPlayerEnabled(false);
+	IsAlive = false;
+}
+
+void ATank::SetPlayerEnabled(bool Enabled)
+{
+	if (PlayerController) {
+
+		if (Enabled) {
+			EnableInput(PlayerController);
+			PlayerController->bShowMouseCursor = true;
+		}
+		else {
+			DisableInput(PlayerController);
+			PlayerController->bShowMouseCursor = false;
+		}
+	}
+}	
 
 
 

@@ -47,6 +47,20 @@ void ABasePawn::Fire()
 	FVector SpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
 	FRotator SpawnRotation = ProjectileSpawnPoint->GetComponentRotation();
 
-	DrawDebugSphere(GetWorld(), SpawnLocation, 25.0f, 12, FColor::Red, false, 3.0f);
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+	
+
+	if (Projectile) {
+		Projectile->SetOwner(this);
+		AActor* ProjectileOwner = Projectile->GetOwner();
+		if (ProjectileOwner) {
+			UE_LOG(LogTemp, Display, TEXT("Owner of this bullet: %s"), *ProjectileOwner->GetActorNameOrLabel());
+		}
+	}
+}
+
+void ABasePawn::HandleDestruction()
+{
+	UE_LOG(LogTemp, Display, TEXT("DROGBAAAAA"));
 }
 

@@ -22,4 +22,6 @@ protected:
 public:
 	ATank* Tank;
 	int32 TowerCount;
+
+	void ActorDied(AActor* DeadActor);
 };

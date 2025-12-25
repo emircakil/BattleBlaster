@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/CapsuleComponent.h"
+#include "Projectile.h"
 #include "BasePawn.generated.h"
 
 UCLASS()
@@ -27,8 +28,13 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> ProjectileClass;
+
 	void RotateTurret(FVector LookAtTarget);
 	
 	void Fire();
+
+	void HandleDestruction();
 
 };
