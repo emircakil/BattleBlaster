@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "Tank.h"
+#include "ScreenMessage.h"
 #include "BattleBlasterGameMode.generated.h"
 
 /**
@@ -23,5 +24,24 @@ public:
 	ATank* Tank;
 	int32 TowerCount;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UScreenMessage> ScreenMessageClass;
+
+	UScreenMessage* ScreenMessageWidget;
+
+
+	UPROPERTY(EditAnywhere)
+	float GameOverDelay = 3.0f;
+
+	UPROPERTY(EditAnywhere)
+	int32 CountdownDelay = 3;
+	int32 CountdownSeconds;
+
+	FTimerHandle CountdownTimerHandle;
+
+	bool IsVictory = false;
+
+	void OnGameOverTimerTimeout();
+	void OnCountDownTimerTimeout();
 	void ActorDied(AActor* DeadActor);
 };

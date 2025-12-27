@@ -61,6 +61,23 @@ void ABasePawn::Fire()
 
 void ABasePawn::HandleDestruction()
 {
-	UE_LOG(LogTemp, Display, TEXT("DROGBAAAAA"));
+	if (DeathParticles) {
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),
+			DeathParticles, GetActorLocation(), GetActorRotation());
+	}
+	if (ExplodeSound) {
+
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplodeSound, GetActorLocation());
+
+	}
+
+
+	if (DeathCameraShakeClass) {
+
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PlayerController) {
+			PlayerController->ClientStartCameraShake(DeathCameraShakeClass);
+		}
+	}
 }
 
